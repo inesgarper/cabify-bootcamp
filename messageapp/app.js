@@ -11,6 +11,6 @@ app.use("/", allRoutes);
 
 require("./error-handling")(app);
 
-console.log('NUEVA VERSIÓN')
+console.log('ejercicio 2')
 
 module.exports = app;
