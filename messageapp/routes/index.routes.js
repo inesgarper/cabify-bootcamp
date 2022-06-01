@@ -14,10 +14,29 @@ router.post("/messages", (req, res) => {
     body: message
   }
 
-  service
-    .createMessage(messageData)
-    .then(({ data }) => res.status(200).json(data))
-    .catch(err => res.status(500).json(err))
+  if (destination === "" || message === "") {
+
+    res.status(400).json({ message: "Fields must not be empty" })
+
+  } else if (typeof destination !== 'string' || typeof message !== 'string') {
+
+    res.status(400).json({ message: "Fields must be filled with text" })
+
+  } else {
+
+    service
+      .createMessage(messageData)
+      .then(({ data }) => res.status(200).json(data))
+      .catch(err => {
+
+        if (!err.config.data.includes(message) || !err.config.data.includes(destination)) {
+
+          res.status(400).json({ message: "Both keys, destination and message are required" })
+
+        }
+      })
+
+  }
 
 })
 

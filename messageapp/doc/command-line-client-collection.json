@@ -1,0 +1,84 @@
+{
+    "id": "2f07ad86-2c0b-4240-b5f9-4683d7f461af",
+    "name": "New Collection",
+    "timestamp": "2022-06-01T17:00:36.535Z",
+    "collection_id": "0-8eeae89c-bacf-4993-b957-f8b374852d74",
+    "folder_id": 0,
+    "environment_id": "0",
+    "totalPass": 0,
+    "totalFail": 0,
+    "results": [
+        {
+            "id": "f98327e5-9a94-434c-8928-673a35d89097",
+            "name": "Key values should be a string",
+            "url": "http://localhost:9001/messages",
+            "time": 10,
+            "responseCode": {
+                "code": 400,
+                "name": "Bad Request"
+            },
+            "tests": {},
+            "testPassFailCounts": {},
+            "times": [
+                10
+            ],
+            "allTests": [
+                {}
+            ]
+        },
+        {
+            "id": "4af0236d-66de-4235-8da7-91b995ea77c6",
+            "name": "Keys must be \"destination\" and \"body\"",
+            "url": "http://localhost:9001/messages",
+            "time": 14,
+            "responseCode": {
+                "code": 400,
+                "name": "Bad Request"
+            },
+            "tests": {},
+            "testPassFailCounts": {},
+            "times": [
+                14
+            ],
+            "allTests": [
+                {}
+            ]
+        },
+        {
+            "id": "f6e343a0-1abb-4251-9421-2e1b42842381",
+            "name": "Both keys must be required",
+            "url": "http://localhost:9001/messages",
+            "time": 19,
+            "responseCode": {
+                "code": 400,
+                "name": "Bad Request"
+            },
+            "tests": {},
+            "testPassFailCounts": {},
+            "times": [
+                19
+            ],
+            "allTests": [
+                {}
+            ]
+        }
+    ],
+    "count": 1,
+    "totalTime": 43,
+    "collection": {
+        "requests": [
+            {
+                "id": "f98327e5-9a94-434c-8928-673a35d89097",
+                "method": "POST"
+            },
+            {
+                "id": "4af0236d-66de-4235-8da7-91b995ea77c6",
+                "method": "POST"
+            },
+            {
+                "id": "f6e343a0-1abb-4251-9421-2e1b42842381",
+                "method": "POST"
+            }
+        ]
+    }
+}
