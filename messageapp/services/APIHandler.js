@@ -8,7 +8,7 @@ class APIHandler {
         })
     }
 
-    createMessage(messageData) {
+    sendMessage(messageData) {
         return this.axiosApp.post('/message', messageData)
     }
 

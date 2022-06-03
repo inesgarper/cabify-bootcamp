@@ -8,3 +8,9 @@ services:
     image: "cabify/backend-bootcamp-messageapp:latest"
     ports:
       - "3000:3000"
+  mongodb:
+    image: mongo
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
