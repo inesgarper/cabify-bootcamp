@@ -3,11 +3,18 @@ const Schema = mongoose.Schema
 
 const messageSchema = new Schema(
     {
-        destination: String,
-        message: String,
-        number: Number,
-        sent: Boolean,
-        confirmed: Boolean
+        destination: {
+            type: String,
+            required: true
+        },
+        message: {
+            type: String,
+            required: true
+        },
+        status: {
+            sent: Boolean,
+            confirmed: Boolean
+        }
     },
     {
         timestamps: true
