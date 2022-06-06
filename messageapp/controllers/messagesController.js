@@ -33,23 +33,27 @@ exports.send_and_save_messages = function (req, res) {
             .sendMessage(messageData)
             .then(() => {
 
-                saveMessage({ destination, message, status: { sent: true, confirmed: true } }, res, "Message saved in the db")
+                saveMessage({ destination, message, status: { sent: true, confirmed: true } })
+                    .then(() => res.status(200).json({ message: "Message saved in the db" }))
+                    .catch(err => res.status(500).json({ message: "Message couldn't be saved" }))
 
             })
             .catch(({ response }) => {
 
                 if (response.status == 504) {
 
-                    saveMessage({ destination, message, status: { sent: true, confirmed: false } }, res, "Message sent but not confirmed")
+                    saveMessage({ destination, message, status: { sent: true, confirmed: false } })
+                        .then(() => res.status(200).json({ message: "Message sent but not confirmed" }))
+                        .catch(err => res.status(500).json({ message: "Message couldn't be saved" }))
 
                 } else if (response.status == 500) {
 
-                    saveMessage({ destination, message, status: { sent: false, confirmed: false } }, res, "Message saved but not sent")
+                    saveMessage({ destination, message, status: { sent: false, confirmed: false } })
+                        .then(() => res.status(200).json({ message: "Message saved but not sent" }))
+                        .catch(err => res.status(500).json({ message: "Message couldn't be saved" }))
 
                 }
-
             })
-
     }
 }
 
