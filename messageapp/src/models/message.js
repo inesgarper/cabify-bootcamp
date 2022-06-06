@@ -8,7 +8,7 @@ const messageSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["ERROR", "OK", "TIMEOUT"],
-  },
+  }
 });
 
 export default database.model("Message", messageSchema);

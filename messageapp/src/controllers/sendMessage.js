@@ -1,13 +1,14 @@
 import http from "http";
 
 import saveMessage from "../clients/saveMessage.js";
+import updateBudget from "../clients/updateBudget.js";
 
 export default async (req, res) => {
   const body = JSON.stringify(req.body);
 
   const postOptions = {
-    host: "127.0.0.1",
-    // host: "messageapp",
+    // host: "127.0.0.1",
+    host: "messageapp",
     port: 3000,
     path: "/message",
     method: "post",
@@ -29,6 +30,8 @@ export default async (req, res) => {
       if (postRes.statusCode !== 200) {
         throw new Error('Error in the messageapp request');
       }
+
+      await updateBudget(1)
 
       res.statusCode = 200;
       res.end(postRes.body);
