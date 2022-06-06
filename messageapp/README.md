@@ -1,26 +1,15 @@
-# Project Title: messageapp
+# Exercise 3 solution
 
-# Endpoints table
+## Getting started
 
-| Method | URL | Description |
-|-------------|-------------|-------------|
-| POST | /messages | Sending messages |
+We are now adding a persistence layer, in our case MongoDB.
 
+Al the source code can be found under `/src` folder with models controllers and database connection
 
-# Official Contract
+To check results we can run:
 
-## Possible success and error responses it can return
+1) run messageapp with `npm run docker` on port 3000
+2) run a local app with `npm run app` on port 9001
+3) or run both servers in one command `npm run start:all`
 
-Message sent to "destination" `200`
-
-Fields must not be empty `Error 400`
-
-Fields must be filled with text `Error 400`
-
-Both keys, destination and body are required `Error 400`
-
-Server Internal Error `Error 500`
-
-
-## Command line tests ran with Postman
-[Here](messageapp\doc\command-line-client-collection.json)
+You can run `./curl_requests.sh` to run some curl into the app and see results.
