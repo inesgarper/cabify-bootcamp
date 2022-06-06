@@ -21,7 +21,7 @@ exports.send_and_save_messages = function (req, res) {
 
     } else if (!destination || !message) {
 
-        res.status(400).json({ message: "Both keys, destination, message and number are required" })
+        res.status(400).json({ message: "Both keys, destination and message required" })
 
     } else if (typeof destination != 'string' || typeof message != 'string') {
 
