@@ -7,7 +7,7 @@ import sendMessage from "./src/controllers/sendMessage.js";
 import getCredit from "./src/controllers/getCredit.js";
 import setBudget from "./src/controllers/setBudget.js";
 
-import Budget from "./src/models/budget.js"
+import { Budget, BudgetBackup } from "./src/models/budget.js"
 
 const app = express();
 
@@ -56,10 +56,19 @@ app.post(
 app.get("/credit", getCredit) // Just for personal testing :)
 
 app.delete("/credit", (req, res) => { // Just for personal testing :)
-  Budget
-    .deleteMany()
-    .then(response => res.status(200).json({ message: "BUDGET BORRADO" }))
-    .catch(err => res.status(500).json({ message: "NO SE HA PODIDO BORRAR EL BUDGET" }))
+
+  Promise
+    .all([Budget.deleteMany(), BudgetBackup.deleteMany()])
+    .then(() => res.status(200).json({ message: "BUDGET BORRADO" }))
+    .catch(() => res.status(500).json({ message: "NO SE HA PODIDO BORRAR EL BUDGET" }))
+})
+
+app.get("/creditBackup", (req, res) => { // Just for personal testing :)
+
+  BudgetBackup
+    .find()
+    .then(response => res.status(200).json(response))
+    .catch(() => res.status(500).json({ message: "NO SE HA PODIDO traer EL budget backup" }))
 })
 
 app.use((err, req, res, _next) => {

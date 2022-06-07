@@ -1,4 +1,4 @@
-import Message from "../models/message.js";
+import { Message, MessageBackup } from "../models/message.js";
 
 import updateBudget from "./updateBudget.js";
 
@@ -17,8 +17,23 @@ export default async (messageParams) => {
       await updateBudget(-1)
 
       const doc = await message.save();
-
       console.log("Message saved succesfully:", doc);
+
+      const messageBackup = new MessageBackup(messageParams)
+
+      try {
+
+        const doc2 = await messageBackup.save()
+
+        console.log("Message backup saved succesfully:", doc2)
+
+      } catch (err) {
+
+        await updateBudget(1)
+        console.log("Error while saving budget backup from saveMessage", err)
+
+      }
+
       return doc;
 
     } catch (err) {

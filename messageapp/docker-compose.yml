@@ -1,9 +1,9 @@
 version: "3"
 services:
-  exercise3:
-    build: .
-    ports:
-      - "9003:9003"
+  # exercise3:
+  #   build: .
+  #   ports:
+  #     - "9003:9003"
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
@@ -17,3 +17,12 @@ services:
     command:
       - '--logpath'
       - '/var/log/mongodb/mongod.log'
+  mongodbbackup:
+    image: mongo
+    volumes:
+      - ./dataBackup/db:/dataBackup/db
+    ports:
+      - 27018:27017
+    command:
+      - '--logpath'
+      - '/var/log/mongodb/mongodBackup.log'

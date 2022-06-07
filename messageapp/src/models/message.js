@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import database from "../database.js";
+import databaseBackup from "../databaseBackup.js";
 
 const messageSchema = new mongoose.Schema({
   destination: String,
@@ -11,4 +12,7 @@ const messageSchema = new mongoose.Schema({
   }
 });
 
-export default database.model("Message", messageSchema);
+const Message = database.model("Message", messageSchema)
+const MessageBackup = databaseBackup.model("MessageBackup", messageSchema)
+
+export { Message, MessageBackup }
