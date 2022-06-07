@@ -1,8 +1,11 @@
 import http from 'http'
 
+import getCredit from '../clients/getCredit.js'
 import createBudget from '../clients/createBudget.js'
+import updateBudget from '../clients/updateBudget.js'
 
 export default async (req, res) => {
+
     const body = JSON.stringify(req.body)
 
     const postOptions = {
@@ -20,21 +23,48 @@ export default async (req, res) => {
 
     const postReq = http.request(postOptions)
 
-    postReq.on("response", async (postRes) => {
+    const budget = await getCredit()
 
-        const { amount } = req.body
+    if (budget.length == 0) {
 
-        try {
+        postReq.on("response", async (postRes) => {
 
-            await createBudget({ amount })
-            res.statusCode = 200;
-            res.end(postRes.body);
+            const { amount } = req.body
 
-        } catch (error) {
+            try {
 
-            console.log(error.message);
-            res.statusCode = 500;
-            res.end(`Internal server error: SERVICE ERROR ${error.message}`);
-        }
-    })
+                await createBudget({ amount })
+                res.statusCode = 200;
+                res.end(postRes.body);
+
+            } catch (error) {
+
+                console.log(error.message);
+                res.statusCode = 500;
+                res.end(`Internal server error: SERVICE ERROR ${error.message}`);
+            }
+        })
+
+    } else {
+
+        postReq.on("response", async (postRes) => {
+
+            const { amount } = req.body
+
+            try {
+
+                await updateBudget(amount)
+                res.statusCode = 200;
+                res.end(postRes.body);
+
+            } catch (error) {
+
+                console.log(error.message);
+                res.statusCode = 500;
+                res.end(`Internal server error: SERVICE ERROR ${error.message}`);
+            }
+        })
+
+    }
+
 }

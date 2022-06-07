@@ -53,9 +53,9 @@ app.post(
   setBudget
 );
 
-app.get("/credit", getCredit)
+app.get("/credit", getCredit) // Just for personal testing :)
 
-app.delete("/credit", (req, res) => {
+app.delete("/credit", (req, res) => { // Just for personal testing :)
   Budget
     .deleteMany()
     .then(response => res.status(200).json({ message: "BUDGET BORRADO" }))
