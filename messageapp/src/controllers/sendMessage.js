@@ -44,8 +44,6 @@ export default async (req, res) => {
           throw new Error('Error in the messageapp request');
         }
 
-        // await updateBudget(1)
-
         res.statusCode = 200;
         res.end(postRes.body);
       } catch (error) {

@@ -1,5 +1,8 @@
 import Budget from '../models/budget.js'
 
+import lockedSync from "locked-sync"
+const sync = lockedSync()
+
 export default async (budgetParams) => {
 
     const checkIfBudget = await Budget.find()
@@ -12,13 +15,20 @@ export default async (budgetParams) => {
 
         const budget = new Budget(budgetParams);
 
+        const end = await sync()
+
         try {
             const doc = await budget.save();
 
             console.log("Budget saved succesfully:", doc);
             return doc;
+
         } catch (err) {
+
             console.log("Error while saving", err);
+
+        } finally {
+            end()
         }
 
     }
