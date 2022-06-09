@@ -9,6 +9,10 @@ const messageSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["ERROR", "OK", "TIMEOUT"],
+  },
+  queueStatus: {
+    type: String,
+    enum: ["QUEUED", "PROCESSING", "FINISHED"]
   }
 });
 
