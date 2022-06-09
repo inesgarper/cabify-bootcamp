@@ -6,6 +6,7 @@ import getMessages from "./src/controllers/getMessages.js";
 import sendMessage from "./src/controllers/sendMessage.js";
 import getCredit from "./src/controllers/getCredit.js";
 import setBudget from "./src/controllers/setBudget.js";
+import getMessageStatus from "./src/controllers/getMessageStatus.js";
 
 import { Budget, BudgetBackup } from "./src/models/budget.js"
 
@@ -46,6 +47,8 @@ app.post(
 );
 
 app.get("/messages", getMessages);
+
+app.get("/message/:messageId/status", getMessageStatus)
 
 app.post(
   "/credit",

@@ -14,7 +14,7 @@
     "test": "jest",
     "app": "node index.js",
     "docker": "docker-compose up",
-    "start:all": "npm run docker & npm run app",
+    "start:all": "npm run docker & npm run dev",
     "dev": "nodemon index.js"
   },
   "engineStrict": true,

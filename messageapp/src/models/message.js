@@ -8,11 +8,7 @@ const messageSchema = new mongoose.Schema({
   body: String,
   status: {
     type: String,
-    enum: ["ERROR", "OK", "TIMEOUT"],
-  },
-  queueStatus: {
-    type: String,
-    enum: ["QUEUED", "PROCESSING", "FINISHED"]
+    enum: ["QUEUED", "PROCESSING", "FINISHED", "ERROR", "OK", "TIMEOUT"],
   }
 });
 

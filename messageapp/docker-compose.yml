@@ -28,9 +28,6 @@ services:
       - '/var/log/mongodb/mongodBackup.log'
   redis:
     image: redis
-    restart: always
-    volumes:
-      - ./cache:/data/cache/data
     ports:
       - 6379:6379
   redis-commander:

@@ -2,12 +2,15 @@ import Queue from 'bull'
 const messageQueue = new Queue('message-queue')
 
 import http from "http"
-import saveMessage from "../clients/saveMessage.js"
 
-let queuedMessageId
+import saveMessage from "../clients/saveMessage.js"
+import updateMessage from "../clients/updateMessage.js"
+import updateBudget from "../clients/updateBudget.js"
+
+
+// -- PROCESS
 
 messageQueue.process(async (job, done) => {
-    console.log('Esto es lo que entra en la cola:', job.data)
 
     const body = JSON.stringify(job.data);
 
@@ -29,29 +32,22 @@ messageQueue.process(async (job, done) => {
     postReq.on("response", async (postRes) => {
 
         try {
-            const queuedMessage = await saveMessage({
+            const message = await updateMessage(job.data.id, {
                 destination: job.data.destination,
                 body: job.data.body,
                 status: postRes.statusCode === 200 ? "OK" : "ERROR",
-                queueStatus: "QUEUED"
             });
 
-            console.log('MENSAJE ENCOLADO EN EL PROCESO', queuedMessage)
-
-            queuedMessageId = queuedMessage._id
-
-            console.log('SOY EL ID', queuedMessageId)
-
-
             if (postRes.statusCode !== 200) {
+                await updateBudget(1)
                 throw new Error('Error in the messageapp request');
             }
+
+            console.log(`Your message ${message._id} has been send sucessfully`)
 
 
         } catch (error) {
             console.log(error.message);
-            // res.statusCode = 500;
-            // res.end(`Internal server error: SERVICE ERROR ${error.message}`);
         }
     });
 
@@ -60,7 +56,7 @@ messageQueue.process(async (job, done) => {
         postReq.abort();
 
         try {
-            const queuedMessage = await saveMessage({
+            await updateMessage(job.data.id, {
                 destination: job.data.destination,
                 body: job.data.body,
                 status: "TIMEOUT",
@@ -72,7 +68,6 @@ messageQueue.process(async (job, done) => {
     });
 
     postReq.on("error", (error) => {
-        //   res.statusCode = 500;
         console.log(error.message);
     });
 
@@ -85,7 +80,13 @@ messageQueue.process(async (job, done) => {
 
 
 const saveQueueMessage = async (destination, body) => {
-    await messageQueue.add({ destination, body });
+
+    const messageinDB = await saveMessage({ destination: destination, body: body, status: "QUEUED" })
+
+    await messageQueue.add({ destination: messageinDB.destination, body: messageinDB.body, id: messageinDB._id });
+
+    return messageinDB
+
 };
 
-export { saveQueueMessage, queuedMessageId } 
+export { saveQueueMessage } 
