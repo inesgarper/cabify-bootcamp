@@ -1,15 +1,15 @@
-# Exercise 3 solution
+# Exercise 7 solution
 
 ## Getting started
 
-We are now adding a persistence layer, in our case MongoDB.
+Al the source code can be found under `credit` and `message` folders.
+To check the result we can run:
 
-Al the source code can be found under `/src` folder with models controllers and database connection
+1) from the root folder `docker-compose` up`
 
-To check results we can run:
+2) if you want to use local source files you will need to comment lines in docker-compose.yml
 
-1) run messageapp with `npm run docker` on port 3000
-2) run a local app with `npm run app` on port 9001
-3) or run both servers in one command `npm run start:all`
+**HINT:** you may have some other docker images already running on the same ports, if so you will need to stop them.
+i.e. `docker stop exercise3_messageapp_1`
 
-You can run `./curl_requests.sh` to run some curl into the app and see results.
+**HINT:** If you don't want to test locally your code you can always run the server from docker by uncommenting the lines in docker-compose.yml

@@ -1,40 +1,133 @@
 version: "3"
+
 services:
-  # exercise3:
-  #   build: .
-  #   ports:
-  #     - "9003:9003"
+
+  message1:
+    image: message1
+    environment:
+      - APPID=9007
+    build: message/
+    restart: always
+    # ports:
+    #   - "9007:80"
+    links:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+    depends_on:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+    volumes:
+      - "./message:/app"
+
+  message2:
+    image: message2
+    environment:
+      - APPID=9008
+    build: message/
+    restart: always
+    # ports:
+    #   - "9008:80"
+    links:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+    depends_on:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+    volumes:
+      - "./message:/app"
+
+  message3:
+    image: message3
+    environment:
+      - APPID=9009
+    build: message/
+    restart: always
+    # ports:
+    #   - "9009:80"
+    links:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+    depends_on:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+    volumes:
+      - "./message:/app"
+
+  credit:
+    build: credit/
+    restart: always
+    ports:
+      - "9017:9017"
+    links:
+      - mongodb_credit
+      - replica_credit
+      - redis
+    depends_on:
+      - mongodb_credit
+      - replica_credit
+      - redis
+    volumes:
+      - "./credit:/app"
+
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
       - "3000:3000"
-  mongodb:
+
+  mongodb_credit:
     image: mongo
+    command: mongod --port 27017
     volumes:
-      - ./data/db:/data/db
+      - ./credit/data/db:/credit/data/db
     ports:
       - 27017:27017
-    command:
-      - '--logpath'
-      - '/var/log/mongodb/mongod.log'
-  mongodbbackup:
+
+  replica_credit:
     image: mongo
+    command: mongod --port 27018
     volumes:
-      - ./dataBackup/db:/dataBackup/db
+      - ./credit/data/replica:/credit/data/replica
     ports:
-      - 27018:27017
-    command:
-      - '--logpath'
-      - '/var/log/mongodb/mongodBackup.log'
+      - 27018:27018
+
+  mongodb_message:
+    image: mongo
+    command: mongod --port 27027
+    volumes:
+      - ./message/data/db:/message/data/db
+    ports:
+      - 27027:27027
+
+  replica_message:
+    image: mongo
+    command: mongod --port 27028
+    volumes:
+      - ./message/data/replica:/message/data/replica
+    ports:
+      - 27028:27028
+
   redis:
     image: redis
     ports:
       - 6379:6379
-  redis-commander:
-    container_name: redis-commander
-    image: rediscommander/redis-commander
-    restart: always
-    environment:
-      - REDIS_HOSTS=local:redis:6379
+
+  haproxy:
+    build: ./haproxy
     ports:
-      - "8081:8081"
+      - 8080:8080
+    depends_on:
+      - message1
+      - message2
+      - message3
