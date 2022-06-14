@@ -2,19 +2,47 @@ version: "3"
 
 services:
 
-  message1:
-    image: message1
-    environment:
-      - APPID=9007
+  registrator:
+    image: gliderlabs/registrator
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    command: -internal consul://consul:8500
+    depends_on:
+      - consul
+    links:
+      - consul
+
+  consul:
+    image: consul
+    command: "agent -server -bootstrap -ui -client=0.0.0.0 -bind='{{ GetPrivateIP }}'"
+
+  balancer:
+    image: haproxy:1.8-alpine
+    depends_on:
+      - registrator
+    links:
+      - registrator
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    ports:
+      - 48151:48151
+
+  message:
+    image: message
     build: message/
     restart: always
-    # ports:
-    #   - "9007:80"
+    deploy:
+      replicas: 4
     links:
+      - balancer
       - messageapp
       - mongodb_message
       - replica_message
       - redis
+    ports:
+      - 80
+    environment:
+      - SERVICE_NAME=message-v1
     depends_on:
       - messageapp
       - mongodb_message
@@ -23,40 +51,22 @@ services:
     volumes:
       - "./message:/app"
 
-  message2:
-    image: message2
-    environment:
-      - APPID=9008
+  message-2:
+    image: message-2
     build: message/
     restart: always
-    # ports:
-    #   - "9008:80"
+    deploy:
+      replicas: 4
     links:
+      - balancer
       - messageapp
       - mongodb_message
       - replica_message
       - redis
-    depends_on:
-      - messageapp
-      - mongodb_message
-      - replica_message
-      - redis
-    volumes:
-      - "./message:/app"
-
-  message3:
-    image: message3
+    ports:
+      - 80
     environment:
-      - APPID=9009
-    build: message/
-    restart: always
-    # ports:
-    #   - "9009:80"
-    links:
-      - messageapp
-      - mongodb_message
-      - replica_message
-      - redis
+      - SERVICE_NAME=message-v2
     depends_on:
       - messageapp
       - mongodb_message
@@ -122,12 +132,33 @@ services:
     image: redis
     ports:
       - 6379:6379
+  # haproxy:
+  #   build: ./haproxy
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     - message1
+  #     - message2
+  #     - message3
 
-  haproxy:
-    build: ./haproxy
-    ports:
-      - 8080:8080
-    depends_on:
-      - message1
-      - message2
-      - message3
+  #   message:
+  #     image: message
+  #     deploy:
+  #       replicas: 4
+  #     links:
+  #       - balancer
+  #     ports:
+  #       - 80
+  #     environment:
+  #       - SERVICE_NAME=message-v1
+
+  #   message:
+  #     image: message
+  #     deploy:
+  #       replicas: 4
+  #     links:
+  #       - balancer
+  #     ports:
+  #       - 80
+  #     environment:
+  #       - SERVICE_NAME=message-v2
